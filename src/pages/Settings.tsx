@@ -4,9 +4,8 @@ import { db } from '../db'
 import { useProfile } from './ProfileLayout'
 import { fmtDate, fmtEur, todayISO } from '../format'
 import { refreshPrices } from '../prices'
-
-const EMOJIS = ['⛵', '🦁', '🚀', '🐬', '🐯', '🦅', '🐢', '⚽', '🎸', '🌟', '🦖', '🏎️']
-const COLORS = ['#2563eb', '#16a34a', '#ea580c', '#9333ea', '#0891b2', '#db2777', '#ca8a04', '#4f46e5']
+import { COLORS, EMOJIS } from '../profileOptions'
+import DeleteButton from '../components/DeleteButton'
 
 export default function Settings() {
   const profile = useProfile()
@@ -140,6 +139,26 @@ export default function Settings() {
           }}
         />
         {msg && <p className="small">{msg}</p>}
+      </section>
+
+      <section className="card">
+        <h2>Izbriši profil</h2>
+        <p className="muted small">
+          Izbriše profil <strong>{profile.name}</strong> in vsa njegova vplačila ter trade-e. Tega
+          ni mogoče razveljaviti.
+        </p>
+        <div className="form-actions">
+          <DeleteButton
+            onDelete={async () => {
+              await db.transaction('rw', [db.profiles, db.cashflows, db.trades], async () => {
+                await db.cashflows.where('profileId').equals(profile.id).delete()
+                await db.trades.where('profileId').equals(profile.id).delete()
+                await db.profiles.delete(profile.id)
+              })
+              // ProfileLayout ob izginulem profilu sam preusmeri na izbiro profilov
+            }}
+          />
+        </div>
       </section>
     </div>
   )

@@ -1,20 +1,40 @@
 import { useLiveQuery } from 'dexie-react-hooks'
 import { useNavigate } from 'react-router-dom'
-import { db } from '../db'
+import { db, newId } from '../db'
+import { COLORS, EMOJIS } from '../profileOptions'
+import { todayISO } from '../format'
 
 export default function ProfilePicker() {
   const profiles = useLiveQuery(() => db.profiles.orderBy('createdAt').toArray(), [])
   const navigate = useNavigate()
+
+  if (!profiles) return null
+
+  async function addProfile() {
+    const taken = new Set(profiles!.map((p) => p.emoji))
+    const takenColors = new Set(profiles!.map((p) => p.color))
+    const id = newId()
+    await db.profiles.add({
+      id,
+      name: 'Nov profil',
+      emoji: EMOJIS.find((e) => !taken.has(e)) ?? EMOJIS[0],
+      color: COLORS.find((c) => !takenColors.has(c)) ?? COLORS[0],
+      openingDate: todayISO(),
+      createdAt: Date.now(),
+    })
+    // naravnost v nastavitve, da si nov profil takoj nastavi ime in datum odprtja
+    navigate(`/p/${id}/nastavitve`)
+  }
 
   return (
     <div className="picker-page">
       <header className="picker-header">
         <div className="picker-logo">⛵</div>
         <h1>Argo</h1>
-        <p>Kdo si?</p>
+        <p>{profiles.length > 0 ? 'Kdo si?' : 'Dodaj svoj prvi profil.'}</p>
       </header>
       <div className="picker-grid">
-        {profiles?.map((p) => (
+        {profiles.map((p) => (
           <button
             key={p.id}
             className="picker-card"
@@ -25,10 +45,16 @@ export default function ProfilePicker() {
             <span className="picker-name">{p.name}</span>
           </button>
         ))}
+        <button className="picker-card picker-card-add" onClick={addProfile}>
+          <span className="picker-emoji">＋</span>
+          <span className="picker-name">Nov profil</span>
+        </button>
       </div>
-      <button className="picker-compare" onClick={() => navigate('/primerjava')}>
-        📊 Primerjava vseh
-      </button>
+      {profiles.length > 1 && (
+        <button className="picker-compare" onClick={() => navigate('/primerjava')}>
+          📊 Primerjava vseh
+        </button>
+      )}
     </div>
   )
 }

@@ -1,8 +1,13 @@
+// sl-SI privzeto združuje šele pri 5 mestih (»2395,50«);
+// 'always' vsili tisočico že pri štirih: »2.395,50«
+const GROUPING = { useGrouping: 'always' } as Intl.NumberFormatOptions
+
 const eur = new Intl.NumberFormat('sl-SI', {
   style: 'currency',
   currency: 'EUR',
   minimumFractionDigits: 2,
   maximumFractionDigits: 2,
+  ...GROUPING,
 })
 
 const eurWhole = new Intl.NumberFormat('sl-SI', {
@@ -10,9 +15,10 @@ const eurWhole = new Intl.NumberFormat('sl-SI', {
   currency: 'EUR',
   minimumFractionDigits: 0,
   maximumFractionDigits: 0,
+  ...GROUPING,
 })
 
-const num = new Intl.NumberFormat('sl-SI', { maximumFractionDigits: 4 })
+const num = new Intl.NumberFormat('sl-SI', { maximumFractionDigits: 4, ...GROUPING })
 
 export function fmtEur(v: number): string {
   return eur.format(v)
