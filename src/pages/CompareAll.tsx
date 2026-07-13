@@ -99,7 +99,9 @@ export default function CompareAll() {
         </div>
 
         <section className="card">
-          {rows.map((r) => (
+          {[...rows]
+            .sort((a, b) => (b.values[b.values.length - 1] ?? 0) - (a.values[a.values.length - 1] ?? 0))
+            .map((r) => (
             <div key={r.profile.id} className="holding-row">
               <div className="compare-name">
                 <i className="legend-dot" style={{ background: r.profile.color }} />
