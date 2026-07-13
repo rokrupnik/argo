@@ -1,0 +1,31 @@
+name: Dnevna osvežitev cen
+
+on:
+  schedule:
+    # ob 16:05 UTC vsak trgovalni dan — po zaprtju Ljubljanske borze
+    - cron: '5 16 * * 1-5'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  prices:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - run: node scripts/fetch-prices.mjs
+      - name: Commit sprememb
+        run: |
+          git config user.name "argo-bot"
+          git config user.email "actions@github.com"
+          git add public/prices
+          if git diff --cached --quiet; then
+            echo "Ni novih cen."
+          else
+            git commit -m "Osvežitev cen $(date -u +%F)"
+            git push
+          fi

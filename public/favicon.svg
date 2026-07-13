@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#2b4a8f"/>
+      <stop offset="100%" stop-color="#1c2a4a"/>
+    </linearGradient>
+  </defs>
+  <rect width="512" height="512" rx="112" fill="url(#bg)"/>
+  <!-- rastoča črta portfelja -->
+  <path d="M 84 372 L 176 306 L 236 336 L 420 192" fill="none" stroke="#0da858" stroke-width="30" stroke-linecap="round" stroke-linejoin="round"/>
+  <circle cx="420" cy="192" r="26" fill="#0da858"/>
+  <!-- jadro ladje Argo -->
+  <path d="M 148 96 L 148 216 L 62 216 Z" fill="#ffffff" opacity="0.95"/>
+  <path d="M 168 96 L 168 216 L 250 216 Z" fill="#ffffff" opacity="0.72"/>
+</svg>
