@@ -10,6 +10,9 @@ export default function ProfilePicker() {
 
   if (!profiles) return null
 
+  const names = new Set(profiles.map((p) => p.name.trim()))
+  const familyComplete = FAMILY.every((n) => names.has(n))
+
   async function addProfile() {
     const taken = new Set(profiles!.map((p) => p.emoji))
     const takenColors = new Set(profiles!.map((p) => p.color))
@@ -45,16 +48,22 @@ export default function ProfilePicker() {
             <span className="picker-name">{p.name}</span>
           </button>
         ))}
-        <button className="picker-card picker-card-add" onClick={addProfile}>
-          <span className="picker-emoji">＋</span>
-          <span className="picker-name">Nov profil</span>
-        </button>
       </div>
-      {profiles.length > 1 && (
-        <button className="picker-compare" onClick={() => navigate('/primerjava')}>
-          📊 Primerjava vseh
-        </button>
-      )}
+      <div className="picker-actions">
+        {profiles.length > 1 && (
+          <button className="picker-compare" onClick={() => navigate('/primerjava')}>
+            📊 Primerjava vseh
+          </button>
+        )}
+        {!familyComplete && (
+          <button className="picker-compare picker-add" onClick={addProfile}>
+            ＋ Nov profil
+          </button>
+        )}
+      </div>
     </div>
   )
 }
+
+/** ko so vsi štirje družinski profili ustvarjeni, gumba za nove ne kažemo več */
+const FAMILY = ['Rok', 'Simon', 'Jakob', 'Andrej']

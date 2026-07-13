@@ -118,19 +118,11 @@ h2 {
   color: var(--profile-color);
 }
 
-.picker-card-add {
-  border: 3px dashed var(--border);
-  box-shadow: none;
-  background: transparent;
-}
-
-.picker-card-add .picker-emoji {
-  background: var(--card);
-  color: var(--muted);
-}
-
-.picker-card-add .picker-name {
-  color: var(--muted);
+.picker-actions {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
 }
 
 .picker-compare {
@@ -145,6 +137,13 @@ h2 {
 
 .picker-compare:active {
   transform: scale(0.96);
+}
+
+.picker-add {
+  color: var(--muted);
+  box-shadow: none;
+  border: 2px dashed var(--border);
+  background: transparent;
 }
 
 .compare-name {
